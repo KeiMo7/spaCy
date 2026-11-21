@@ -221,6 +221,23 @@ class Warnings(metaclass=ErrorsWithCodes):
             "'spacy init vectors --attr'")
     W126 = ("These keys are unsupported: {unsupported}")
     W127 = ("Not all `Language.pipe` worker processes completed successfully")
+    W128 = ("Resuming training from a snapshot, but the following differ from "
+            "the values stored in the snapshot: {diff}. The run will continue "
+            "because `[training].resume_mismatch` is set to 'warn'.")
+    W129 = ("The snapshot {path} is incomplete or corrupt and will be ignored: "
+            "{error}. Falling back to the previous complete snapshot{fallback}.")
+    W130 = ("Could not write the periodic training snapshot to {path}: {error}. "
+            "The training run will continue and the previous complete snapshot "
+            "(if any) is left untouched.")
+    W132 = ("Resumed from snapshot {path} (step {step}, epoch {epoch}). The "
+            "first validation score after resuming ({resumed}) is much lower "
+            "than the score stored in the snapshot ({stored}). This can mean "
+            "that the snapshot doesn't belong to this run, or that the data "
+            "or the environment changed.")
+    W134 = ("The snapshot stored the following device information: {stored}. "
+            "The run is continuing on {current}. Resuming across devices is "
+            "supported, but the per-device numerical results may differ "
+            "slightly from the original run.")
 
 
 class Errors(metaclass=ErrorsWithCodes):
@@ -988,6 +1005,24 @@ class Errors(metaclass=ErrorsWithCodes):
     E1057 = ("The `TextCatReduce` architecture must be used with at least one "
              "reduction. Please enable one of `use_reduce_first`, "
              "`use_reduce_last`, `use_reduce_max` or `use_reduce_mean`.")
+    E1058 = ("Could not resume training from the output directory {path}: no "
+             "complete training snapshot was found. If you want to start a new "
+             "run, remove the snapshot directory or train into a different "
+             "output directory.")
+    E1059 = ("Cannot resume training: {diff}. Set "
+             "`[training].resume_mismatch` to 'warn' to continue anyway or to "
+             "'none' to skip this check.")
+    E1060 = ("Unsupported training snapshot format version {version} in {path}. "
+             "This version of spaCy supports snapshot versions {supported}. "
+             "Refusing to resume to avoid loading an incompatible checkpoint.")
+    E1061 = ("Another training process (PID {pid}) already holds the lock on the "
+             "output directory {path}. Only one process may write to an output "
+             "directory at a time. Wait for the other process to finish, or "
+             "remove the lock file {lock_path} if you are sure the process is "
+             "no longer running.")
+    E1062 = ("The training snapshot in {path} is incomplete or corrupt: {error}")
+    E1063 = ("Cannot write the training snapshot to {path}: {error}. The "
+             "previous complete snapshot was preserved.")
 
 
 # Deprecated model shortcuts, only used in errors and warnings

@@ -372,6 +372,11 @@ class ConfigSchemaTraining(BaseModel):
     annotating_components: List[str] = Field(..., title="Pipeline components that should set annotations during training")
     before_to_disk: Optional[Callable[["Language"], "Language"]] = Field(..., title="Optional callback to modify nlp object after training, before it's saved to disk")
     before_update: Optional[Callable[["Language", Dict[str, Any]], None]] = Field(..., title="Optional callback that is invoked at the start of each training step")
+    save_every: StrictInt = Field(0, title="Write a periodic training snapshot every N steps or epochs (0 disables periodic snapshots)")
+    frequency_unit: Literal["step", "epoch"] = Field("step", title="Unit for save_every: 'step' or 'epoch'")
+    max_keep: StrictInt = Field(2, title="Number of periodic snapshots to keep")
+    resume_mismatch: Literal["fail", "warn", "none"] = Field("fail", title="How to handle config/structure differences when resuming")
+    resume_validation: StrictBool = Field(True, title="Validate a resumed checkpoint with a small evaluation before continuing")
     # fmt: on
 
     model_config = ConfigDict(extra="forbid", arbitrary_types_allowed=True)

@@ -1132,7 +1132,7 @@ in the section `[paths]`.
 > ```
 
 ```bash
-$ python -m spacy train [config_path] [--output] [--code] [--verbose] [--gpu-id] [overrides]
+$ python -m spacy train [config_path] [--output] [--code] [--verbose] [--gpu-id] [--resume] [--resume-from] [overrides]
 ```
 
 | Name              | Description                                                                                                                                                                                                        |
@@ -1140,6 +1140,8 @@ $ python -m spacy train [config_path] [--output] [--code] [--verbose] [--gpu-id]
 | `config_path`     | Path to [training config](/api/data-formats#config) file containing all settings and hyperparameters. If `-`, the data will be [read from stdin](/usage/training#config-stdin). ~~Union[Path, str] \(positional)~~ |
 | `--output`, `-o`  | Directory to store trained pipeline in. Will be created if it doesn't exist. ~~Optional[Path] \(option)~~                                                                                                          |
 | `--code`, `-c`    | Path to Python file with additional code to be imported. Allows [registering custom functions](/usage/training#custom-functions) for new architectures. ~~Optional[Path] \(option)~~                               |
+| `--resume`, `-R`  | Continue training from the latest complete snapshot in the output directory. See [resuming training](/usage/training#resume). ~~bool (flag)~~                                                                      |
+| `--resume-from`   | Continue training from a specific snapshot directory (implies `--resume`). ~~Optional[Path] \(option)~~                                                                                                            |
 | `--verbose`, `-V` | Show more detailed messages during training. ~~bool (flag)~~                                                                                                                                                       |
 | `--gpu-id`, `-g`  | GPU ID or `-1` for CPU. Defaults to `-1`. ~~int (option)~~                                                                                                                                                         |
 | `--help`, `-h`    | Show help message and available arguments. ~~bool (flag)~~                                                                                                                                                         |

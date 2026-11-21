@@ -714,6 +714,68 @@ still look good.
 
 </Accordion>
 
+## Resuming training from a snapshot {id="resume",tag="new"}
+
+Long training runs on preemptible or spot instances can be interrupted at any
+time. Enable periodic snapshots with `[training].save_every` and continue an
+interrupted run with `spacy train --resume`. Snapshots are written to
+`<output>/training-state` and never overwrite `model-best` or `model-last`.
+
+```ini
+[training]
+# Write a snapshot every 500 steps and keep the two most recent ones
+save_every = 500
+max_keep = 2
+```
+
+```bash
+python -m spacy train config.cfg --output training/ --resume
+```
+
+A snapshot captures the complete training state: the model weights, the
+optimizer's moment estimates and moving averages, the progress of the learning
+rate and batch size schedules, the RNG state, the position in the current epoch
+(including the shuffle order and the number of consumed examples), and the
+evaluation history used for the best model and early stopping. Resuming
+therefore produces the same result as an uninterrupted run, including the number
+of steps and evaluations.
+
+| Name                | Description                                                                                                   |
+| ------------------- | ------------------------------------------------------------------------------------------------------------- |
+| `save_every`        | Snapshot every N steps, or every N epochs if `frequency_unit = "epoch"`. `0` (default) disables snapshots.    |
+| `frequency_unit`    | `"step"` or `"epoch"`.                                                                                        |
+| `max_keep`          | How many snapshots of the current run to keep.                                                                |
+| `resume_mismatch`   | `"fail"` (default) refuses to resume when the config or model structure changed, `"warn"` reports and continues, `"none"` skips the check. |
+| `resume_validation` | Run a small evaluation after restoring a snapshot and warn if the score dropped significantly. Defaults to `true`. |
+
+Snapshots are written atomically and carry checksums. If a write is interrupted
+(e.g. the node is reclaimed), the incomplete snapshot is ignored and the previous
+complete one is used. Snapshot directories are only pruned within their own run,
+so starting a new run in an existing output directory never deletes the
+snapshots of an earlier run. Only one process can write to an output directory
+at a time; a second process fails immediately instead of corrupting the
+artifacts.
+
+<Accordion title="What's checked when resuming" spaced id="resume-checks">
+
+The snapshot stores a fingerprint of the resolved config and of the model
+structure. When resuming, the pipeline components, factories, frozen and
+annotating components, batch size, score weights, corpus settings and the model
+structure are compared item by item. A difference is reported with the field
+that changed, e.g. `training.frozen_components: ['tagger'] -> []`. Resuming on a
+different device (CPU vs. GPU or another GPU) is supported; the change is
+reported in the log.
+
+</Accordion>
+
+<Accordion title="Streaming corpora" spaced id="resume-streaming">
+
+With `max_epochs = -1` the corpus is streamed instead of being loaded into
+memory. Resuming re-reads the corpus from the start and skips the examples that
+were already consumed, so memory use doesn't depend on the size of the corpus.
+
+</Accordion>
+
 ## Custom functions {id="custom-functions"}
 
 Registered functions in the training config files can refer to built-in

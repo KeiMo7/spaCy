@@ -7,6 +7,7 @@ import typer
 from wasabi import msg
 
 from .. import util
+from ..training import checkpoint as ckpt
 from ..training.initialize import init_nlp
 from ..training.loop import train as train_nlp
 from ._util import (
@@ -50,6 +51,17 @@ def train_cli(
         help="Display more information for debugging purposes",
     ),
     use_gpu: int = Opt(-1, "--gpu-id", "-g", help="GPU ID or -1 for CPU"),
+    resume: bool = Opt(
+        False,
+        "--resume",
+        "-R",
+        help="Continue training from the latest complete snapshot in the output directory",
+    ),
+    resume_from: Optional[Path] = Opt(
+        None,
+        "--resume-from",
+        help="Continue training from a specific snapshot directory (implies --resume)",
+    ),
     # fmt: on
 ):
     """
@@ -64,13 +76,25 @@ def train_cli(
     used to register custom functions and architectures that can then be
     referenced in the config.
 
+    Use --resume (or --resume-from) to continue an interrupted run from a
+    training snapshot. Snapshotting needs to have been enabled with
+    `[training].save_every` when the run was started; a run started with
+    --resume always keeps writing snapshots.
+
     DOCS: https://spacy.io/api/cli#train
     """
     if verbose:
         util.logger.setLevel(logging.DEBUG)
     overrides = parse_config_overrides(ctx.args)
     import_code(code_path)
-    train(config_path, output_path, use_gpu=use_gpu, overrides=overrides)
+    train(
+        config_path,
+        output_path,
+        use_gpu=use_gpu,
+        overrides=overrides,
+        resume=resume,
+        resume_from=resume_from,
+    )
 
 
 def train(
@@ -79,9 +103,14 @@ def train(
     *,
     use_gpu: int = -1,
     overrides: Dict[str, Any] = util.SimpleFrozenDict(),
+    resume: bool = False,
+    resume_from: Optional[Union[str, Path]] = None,
 ):
     config_path = util.ensure_path(config_path)
     output_path = util.ensure_path(output_path)
+    resume_from = util.ensure_path(resume_from)
+    if resume_from is not None:
+        resume = True
     # Make sure all files and paths exists if they are needed
     if not config_path or (str(config_path) != "-" and not config_path.exists()):
         msg.fail("Config file not found", config_path, exits=1)
@@ -92,6 +121,13 @@ def train(
             output_path.mkdir(parents=True)
             msg.good(f"Created output directory: {output_path}")
         msg.info(f"Saving to output directory: {output_path}")
+    if resume and (output_path is None or not output_path.exists()):
+        msg.fail(
+            "The --resume option requires an existing output directory with a training snapshot",
+            exits=1,
+        )
+    if resume_from is not None and not resume_from.is_dir():
+        msg.fail("--resume-from should point to a snapshot directory", resume_from, exits=1)
     setup_gpu(use_gpu)
     with show_validation_error(config_path):
         config = util.load_config(config_path, overrides=overrides, interpolate=False)
@@ -100,4 +136,19 @@ def train(
         nlp = init_nlp(config, use_gpu=use_gpu)
     msg.good("Initialized pipeline")
     msg.divider("Training pipeline")
-    train_nlp(nlp, output_path, use_gpu=use_gpu, stdout=sys.stdout, stderr=sys.stderr)
+    try:
+        train_nlp(
+            nlp,
+            output_path,
+            use_gpu=use_gpu,
+            stdout=sys.stdout,
+            stderr=sys.stderr,
+            resume=resume,
+            resume_from=resume_from,
+        )
+    except ckpt.OutputDirLockedError as e:
+        msg.fail(str(e), exits=1)
+    except ckpt.ResumeMismatchError as e:
+        msg.fail(str(e), exits=1)
+    except ckpt.SnapshotError as e:
+        msg.fail(str(e), exits=1)
