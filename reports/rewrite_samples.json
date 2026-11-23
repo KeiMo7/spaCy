@@ -1,0 +1,358 @@
+{
+  "whole_replacement": {
+    "text_before": "The contract was signed by John Smith on 2024-01-01.",
+    "text_after": "The contract was signed by [CLIENT] on 2024-01-01.",
+    "summary": {
+      "char_count_before": 52,
+      "char_count_after": 50,
+      "char_delta": -2,
+      "char_delta_declared": -2,
+      "entity_count_before": 1,
+      "entity_count_after": 1,
+      "kept_count": 0,
+      "replaced_count": 1,
+      "shrunk_count": 0,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    "operations": [
+      {
+        "start": 27,
+        "end": 37,
+        "replacement": "[CLIENT]",
+        "original": null
+      }
+    ],
+    "entities": [
+      {
+        "index": 0,
+        "label": "PERSON",
+        "original_start": 27,
+        "original_end": 37,
+        "original_text": "John Smith",
+        "new_start": 27,
+        "new_end": 35,
+        "disposition": "replaced",
+        "reason": "contained_in_operation:0",
+        "ledger_start": 27,
+        "ledger_end": 35
+      }
+    ],
+    "problems": []
+  },
+  "crossing_shrink": {
+    "text_before": "ACME Corporation Ltd owns it.",
+    "text_after": "ACME Inc.Corporation Ltd owns it.",
+    "summary": {
+      "char_count_before": 29,
+      "char_count_after": 33,
+      "char_delta": 4,
+      "char_delta_declared": 4,
+      "entity_count_before": 1,
+      "entity_count_after": 1,
+      "kept_count": 0,
+      "replaced_count": 0,
+      "shrunk_count": 1,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    "operations": [
+      {
+        "start": 0,
+        "end": 5,
+        "replacement": "ACME Inc.",
+        "original": null
+      }
+    ],
+    "entities": [
+      {
+        "index": 0,
+        "label": "ORG",
+        "original_start": 0,
+        "original_end": 18,
+        "original_text": "ACME Corporation L",
+        "new_start": 9,
+        "new_end": 20,
+        "disposition": "shrunk",
+        "reason": "crosses_rewrite_boundary;boundary_adjusted",
+        "ledger_start": 9,
+        "ledger_end": 22
+      }
+    ],
+    "problems": []
+  },
+  "crossing_drop": {
+    "text_before": "ACME Corporation Ltd owns it.",
+    "text_after": "ACME Inc.Corporation Ltd owns it.",
+    "summary": {
+      "char_count_before": 29,
+      "char_count_after": 33,
+      "char_delta": 4,
+      "char_delta_declared": 4,
+      "entity_count_before": 1,
+      "entity_count_after": 0,
+      "kept_count": 0,
+      "replaced_count": 0,
+      "shrunk_count": 0,
+      "adjusted_count": 0,
+      "dropped_count": 1,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    "operations": [
+      {
+        "start": 0,
+        "end": 5,
+        "replacement": "ACME Inc.",
+        "original": null
+      }
+    ],
+    "entities": [
+      {
+        "index": 0,
+        "label": "ORG",
+        "original_start": 0,
+        "original_end": 18,
+        "original_text": "ACME Corporation L",
+        "new_start": -1,
+        "new_end": -1,
+        "disposition": "dropped",
+        "reason": "crosses_rewrite_boundary",
+        "ledger_start": null,
+        "ledger_end": null
+      }
+    ],
+    "problems": []
+  },
+  "adjacent_merge": {
+    "text_before": "abc def ghi",
+    "text_after": "abcdefghi",
+    "summary": {
+      "char_count_before": 11,
+      "char_count_after": 9,
+      "char_delta": -2,
+      "char_delta_declared": -2,
+      "entity_count_before": 2,
+      "entity_count_after": 1,
+      "kept_count": 0,
+      "replaced_count": 0,
+      "shrunk_count": 0,
+      "adjusted_count": 1,
+      "dropped_count": 1,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    "operations": [
+      {
+        "start": 3,
+        "end": 4,
+        "replacement": "",
+        "original": null
+      },
+      {
+        "start": 7,
+        "end": 8,
+        "replacement": "",
+        "original": null
+      }
+    ],
+    "entities": [
+      {
+        "index": 0,
+        "label": "A",
+        "original_start": 0,
+        "original_end": 3,
+        "original_text": "abc",
+        "new_start": 0,
+        "new_end": 9,
+        "disposition": "adjusted",
+        "reason": "widened_to_token_boundary",
+        "ledger_start": 0,
+        "ledger_end": 3
+      },
+      {
+        "index": 1,
+        "label": "B",
+        "original_start": 4,
+        "original_end": 7,
+        "original_text": "def",
+        "new_start": -1,
+        "new_end": -1,
+        "disposition": "dropped",
+        "reason": "overlap_conflict",
+        "ledger_start": 3,
+        "ledger_end": 6
+      }
+    ],
+    "problems": [
+      {
+        "index": 1,
+        "kind": "overlap_conflict",
+        "message": "entity 1 (0, 9, 'B') overlaps kept entity 0 and was dropped",
+        "start": 0,
+        "end": 9,
+        "replacement": null,
+        "declared": null,
+        "found": null,
+        "skipped": false
+      }
+    ]
+  },
+  "grow_and_multiple": {
+    "text_before": "John Smith signed it on 2024-01-01 in Paris.",
+    "text_after": "Mr. John Smith Jr. signed it on [DATE] in Paris.",
+    "summary": {
+      "char_count_before": 44,
+      "char_count_after": 48,
+      "char_delta": 4,
+      "char_delta_declared": 4,
+      "entity_count_before": 2,
+      "entity_count_after": 2,
+      "kept_count": 0,
+      "replaced_count": 2,
+      "shrunk_count": 0,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    "operations": [
+      {
+        "start": 0,
+        "end": 10,
+        "replacement": "Mr. John Smith Jr.",
+        "original": null
+      },
+      {
+        "start": 24,
+        "end": 34,
+        "replacement": "[DATE]",
+        "original": null
+      }
+    ],
+    "entities": [
+      {
+        "index": 0,
+        "label": "PERSON",
+        "original_start": 0,
+        "original_end": 10,
+        "original_text": "John Smith",
+        "new_start": 0,
+        "new_end": 18,
+        "disposition": "replaced",
+        "reason": "contained_in_operation:0",
+        "ledger_start": 0,
+        "ledger_end": 18
+      },
+      {
+        "index": 1,
+        "label": "DATE",
+        "original_start": 24,
+        "original_end": 34,
+        "original_text": "2024-01-01",
+        "new_start": 32,
+        "new_end": 38,
+        "disposition": "replaced",
+        "reason": "contained_in_operation:1",
+        "ledger_start": 32,
+        "ledger_end": 38
+      }
+    ],
+    "problems": []
+  },
+  "empty_operations": {
+    "text_before": "The contract was signed by John Smith on 2024-01-01.",
+    "text_after": "The contract was signed by John Smith on 2024-01-01.",
+    "summary": {
+      "char_count_before": 52,
+      "char_count_after": 52,
+      "char_delta": 0,
+      "char_delta_declared": 0,
+      "entity_count_before": 1,
+      "entity_count_after": 1,
+      "kept_count": 1,
+      "replaced_count": 0,
+      "shrunk_count": 0,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    "operations": [],
+    "entities": [
+      {
+        "index": 0,
+        "label": "PERSON",
+        "original_start": 27,
+        "original_end": 37,
+        "original_text": "John Smith",
+        "new_start": 27,
+        "new_end": 37,
+        "disposition": "kept",
+        "reason": null,
+        "ledger_start": 27,
+        "ledger_end": 37
+      }
+    ],
+    "problems": []
+  },
+  "malformed_skip": {
+    "text_before": "Hello world",
+    "text_after": "Hi world",
+    "summary": {
+      "char_count_before": 11,
+      "char_count_after": 8,
+      "char_delta": -3,
+      "char_delta_declared": -3,
+      "entity_count_before": 1,
+      "entity_count_after": 1,
+      "kept_count": 0,
+      "replaced_count": 1,
+      "shrunk_count": 0,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 1,
+      "reconciles": true
+    },
+    "operations": [
+      {
+        "start": 0,
+        "end": 5,
+        "replacement": "Hi",
+        "original": null
+      }
+    ],
+    "entities": [
+      {
+        "index": 0,
+        "label": "GREET",
+        "original_start": 0,
+        "original_end": 5,
+        "original_text": "Hello",
+        "new_start": 0,
+        "new_end": 2,
+        "disposition": "replaced",
+        "reason": "contained_in_operation:0",
+        "ledger_start": 0,
+        "ledger_end": 2
+      }
+    ],
+    "problems": [
+      {
+        "index": 1,
+        "kind": "out_of_bounds",
+        "message": "span 100..200 is outside text of length 11",
+        "start": 100,
+        "end": 200,
+        "replacement": "X",
+        "declared": null,
+        "found": null,
+        "skipped": true
+      }
+    ]
+  }
+}

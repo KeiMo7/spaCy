@@ -124,6 +124,10 @@ class Corpus:
     augment (Callable[Example, Iterable[Example]]): Optional data augmentation
         function, to extrapolate additional examples from your annotations.
     shuffle (bool): Whether to shuffle the examples.
+    rewriter (Callable[[Doc, Language], Doc]): Optional opt-in hook applied to
+        each reference Doc before examples are constructed, e.g.
+        ``rewrite_doc`` to remap entity offsets after a text rewrite. When it
+        is ``None`` (the default) the corpus path is exactly unchanged.
 
     DOCS: https://spacy.io/api/corpus
     """
@@ -137,6 +141,7 @@ class Corpus:
         max_length: int = 0,
         augmenter: Optional[Callable] = None,
         shuffle: bool = False,
+        rewriter: Optional[Callable[[Doc, "Language"], Doc]] = None,
     ) -> None:
         self.path = util.ensure_path(path)
         self.gold_preproc = gold_preproc
@@ -144,6 +149,7 @@ class Corpus:
         self.limit = limit
         self.augmenter = augmenter if augmenter is not None else dont_augment
         self.shuffle = shuffle
+        self.rewriter = rewriter
 
     def __call__(self, nlp: "Language") -> Iterator[Example]:
         """Yield examples from the data.
@@ -154,6 +160,11 @@ class Corpus:
         DOCS: https://spacy.io/api/corpus#call
         """
         ref_docs = self.read_docbin(nlp.vocab, walk_corpus(self.path, FILE_TYPE))
+        if self.rewriter is not None:
+            # Opt-in hook: remap each reference Doc through the caller's
+            # rewriter before examples are constructed. When no rewriter is
+            # configured the corpus path below is unchanged.
+            ref_docs = (self.rewriter(doc, nlp) for doc in ref_docs)
         if self.shuffle:
             ref_docs = list(ref_docs)  # type: ignore
             random.shuffle(ref_docs)  # type: ignore

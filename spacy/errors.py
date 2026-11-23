@@ -988,6 +988,33 @@ class Errors(metaclass=ErrorsWithCodes):
     E1057 = ("The `TextCatReduce` architecture must be used with at least one "
              "reduction. Please enable one of `use_reduce_first`, "
              "`use_reduce_last`, `use_reduce_max` or `use_reduce_mean`.")
+    E1058 = ("Invalid rewrite operation at index {index}: {message}. "
+             "Original span: {start}..{end}, source fragment: {found!r}, "
+             "declared fragment: {declared!r}, replacement: {replacement!r}. "
+             "Skipped: {skipped}.")
+    E1059 = ("Rewrite operations must not overlap, but operation {index} "
+             "({start}, {end}) overlaps with operation {previous_index} "
+             "({previous_start}, {previous_end}).")
+    E1060 = ("Unknown entity disposition policy '{policy}'. Expected one of: "
+             "{options}.")
+    E1061 = ("Rewrite alignment mode '{mode}' is not supported. Expected one of: "
+             "{options}.")
+    E1062 = ("Entity ({start}, {end}, {label!r}) conflicts with entity "
+             "({other_start}, {other_end}, {other_label!r}) after rewriting "
+             "and the conflict policy is 'raise'.")
+    E1063 = ("Rewriting entity offsets requires a tokenizer so that positions "
+             "are aligned to the existing tokenization, but no tokenizer was "
+             "provided. Pass a Language or Tokenizer object, or set "
+             "alignment='none' to keep raw character offsets.")
+    E1064 = ("Entity ({start}, {end}, {label!r}) overlaps entity "
+             "({other_start}, {other_end}, {other_label!r}) in the source "
+             "annotations; source entities must not overlap.")
+    E1065 = ("Entity ({start}, {end}, {label!r}) is not a valid span for a text "
+             "of length {length}.")
+    E1066 = ("rewrite_doc requires token-boundary alignment because Doc.ents "
+             "must align to the tokenization, but alignment='none' was passed. "
+             "Use 'strict', 'contract' or 'expand', or call "
+             "rewrite_annotations directly for raw character offsets.")
 
 
 # Deprecated model shortcuts, only used in errors and warnings

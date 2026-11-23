@@ -1,0 +1,24 @@
+[
+  {
+    "text": "The contract was signed by [CLIENT] on 2024-01-01.",
+    "entities": [
+      {
+        "text": "[CLIENT]",
+        "label": "PERSON",
+        "start_char": 27,
+        "end_char": 35
+      }
+    ]
+  },
+  {
+    "text": "ACME Inc.Corporation Ltd owns it.",
+    "entities": [
+      {
+        "text": "Corporation",
+        "label": "ORG",
+        "start_char": 9,
+        "end_char": 20
+      }
+    ]
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "command": "python -m pytest spacy/tests/training/test_corpus.py spacy/tests/training/test_readers.py spacy/tests/training/test_training.py spacy/tests/serialize/test_serialize_docbin.py spacy/tests/serialize/test_serialize_doc.py -q",
+  "exit_code": 0,
+  "stdout": ".....sss................................................................ [ 85%]\n............                                                             [100%]\n81 passed, 3 skipped in 2.95s\n",
+  "stderr": ""
+}

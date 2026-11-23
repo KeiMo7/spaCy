@@ -16,13 +16,31 @@ from .iob_utils import (  # noqa: F401
     tags_to_entities,
 )
 from .loggers import console_logger  # noqa: F401
+from .rewrite import (  # noqa: F401
+    EntityAnnotation,
+    EntityRewrite,
+    RewriteOp,
+    RewriteProblem,
+    RewriteResult,
+    RewrittenDoc,
+    rewrite_annotations,
+    rewrite_doc,
+    rewrite_docbin,
+    rewrite_docbin_from_manifest,
+)
 
 __all__ = [
     "Alignment",
     "Corpus",
+    "EntityAnnotation",
+    "EntityRewrite",
     "Example",
     "JsonlCorpus",
     "PlainTextCorpus",
+    "RewriteOp",
+    "RewriteProblem",
+    "RewriteResult",
+    "RewrittenDoc",
     "biluo_tags_to_offsets",
     "biluo_tags_to_spans",
     "biluo_to_iob",
@@ -36,6 +54,10 @@ __all__ = [
     "orth_variants_augmenter",
     "read_json_file",
     "remove_bilu_prefix",
+    "rewrite_annotations",
+    "rewrite_doc",
+    "rewrite_docbin",
+    "rewrite_docbin_from_manifest",
     "split_bilu_label",
     "tags_to_entities",
     "validate_get_examples",

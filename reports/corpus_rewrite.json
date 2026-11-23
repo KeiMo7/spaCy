@@ -1,0 +1,38 @@
+{
+  "source": "reports/corpus/source.spacy",
+  "target": "reports/corpus/rewritten.spacy",
+  "document_count": 2,
+  "summaries": [
+    {
+      "char_count_before": 52,
+      "char_count_after": 50,
+      "char_delta": -2,
+      "char_delta_declared": -2,
+      "entity_count_before": 1,
+      "entity_count_after": 1,
+      "kept_count": 0,
+      "replaced_count": 1,
+      "shrunk_count": 0,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    },
+    {
+      "char_count_before": 29,
+      "char_count_after": 33,
+      "char_delta": 4,
+      "char_delta_declared": 4,
+      "entity_count_before": 1,
+      "entity_count_after": 1,
+      "kept_count": 0,
+      "replaced_count": 0,
+      "shrunk_count": 1,
+      "adjusted_count": 0,
+      "dropped_count": 0,
+      "skipped_operation_count": 0,
+      "reconciles": true
+    }
+  ],
+  "reconciles": true
+}

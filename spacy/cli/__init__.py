@@ -24,6 +24,7 @@ from .init_pipeline import init_pipeline_cli  # noqa: F401
 from .package import package  # noqa: F401
 from .pretrain import pretrain  # noqa: F401
 from .profile import profile  # noqa: F401
+from .rewrite_ents import rewrite_ents_cli  # noqa: F401
 from .project.assets import project_assets  # type: ignore[attr-defined]  # noqa: F401
 from .project.clone import project_clone  # type: ignore[attr-defined]  # noqa: F401
 from .project.document import (  # type: ignore[attr-defined]  # noqa: F401
